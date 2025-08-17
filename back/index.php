@@ -10,7 +10,7 @@ require_once '../vendor/autoload.php';
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // 1. Servir les fichiers statiques (JS, CSS, images)
-if (str_starts_with($path, '/dist/')) {
+if (str_starts_with($path, '/dist/') || str_starts_with($path, '/public/')) {
     $file = __DIR__ . '/../front' . $path;
 
     if (file_exists($file)) {

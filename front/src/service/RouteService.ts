@@ -72,8 +72,6 @@ export class RouteService {
             const startAddress = await this.getAddress(start.lat, start.lng);
             const endAddress = await this.getAddress(end.lat, end.lng);
 
-            console.log("Départ :", startAddress);
-            console.log("Arrivée :", endAddress);
 
             // Calcul itinéraire via OSRM
             const url = `https://router.project-osrm.org/route/v1/driving/${start.lng},${start.lat};${end.lng},${end.lat}?overview=full&geometries=geojson`;
