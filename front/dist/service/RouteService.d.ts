@@ -7,6 +7,7 @@ export declare class RouteService {
     private erreurSpan;
     constructor(mapContainerId: string, distanceInputId: string, erreurSpanId: string);
     private initClick;
+    private getAddress;
     private calculerDistance;
 }
 //# sourceMappingURL=RouteService.d.ts.map
