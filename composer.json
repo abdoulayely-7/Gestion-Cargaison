@@ -1,0 +1,16 @@
+{
+    "name": "abdallah/back",
+    "autoload": {
+        "psr-4": {
+            "Abdallah\\Back\\": "src/",
+            "Back\\": "back/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Abdoulaye Ly",
+            "email": "abdoulayely148@gmail.com"
+        }
+    ],
+    "require": {}
+}

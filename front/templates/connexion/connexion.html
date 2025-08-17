@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>GPduMonde — Connexion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+    </style>
+</head>
+
+<body
+        class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 flex items-center justify-center p-6">
+
+<div class="w-full max-w-md">
+    <div class="rounded-3xl p-8 bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl ring-1 ring-white/6">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3 mb-6">
+            <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-indigo-500 flex items-center justify-center text-white text-lg font-bold shadow-md">
+                GP
+            </div>
+            <div>
+                <h1 class="text-white text-2xl font-extrabold leading-tight">GPduMonde</h1>
+                <p class="text-slate-300 text-sm">Gestion cargaisons — Espace gestionnaire</p>
+                <p id="erreurConnexion" class="text-red-500 text-center mt-1 text-sm hidden">Email et/ou mot de passe incorrecte</p>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form class="space-y-5" id="loginForm">
+            <div>
+                <label class="block text-slate-300 text-sm mb-2" for="email">Adresse email</label>
+                <input id="email" type="email"
+                       class="w-full p-3 rounded-xl bg-white/6 border border-white/8 placeholder-slate-400 text-black focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+                       placeholder="gestionnaire@gpdumonde.com" />
+            </div>
+
+            <div>
+                <label class="block text-slate-300 text-sm mb-2" for="password">Mot de passe</label>
+                <input id="password" type="password"
+                       class="w-full p-3 rounded-xl bg-white/6 border border-white/8 placeholder-slate-400 text-black focus:outline-none focus:ring-2 focus:ring-cyan-400 transition"
+                       placeholder="••••••••" />
+            </div>
+
+            <button type="submit"
+                    class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-900 font-semibold shadow-lg hover:scale-[0.997] active:scale-95 transition">
+                Se connecter
+            </button>
+
+            <div class="flex items-center justify-between text-xs text-slate-400">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="h-4 w-4 rounded-md bg-white/6 border-white/8" />
+                    <span>Rester connecté</span>
+                </label>
+                <a href="#" class="hover:underline text-slate-200/90">Mot de passe oublié ?</a>
+            </div>
+        </form>
+
+        <p class="mt-6 text-center text-slate-400 text-xs">© <span id="year"></span> GPduMonde — Tous droits
+            réservés</p>
+    </div>
+</div>
+
+<script type="module" src="/dist/pages/connexion.js"></script>
+
+
+</body>
+
+</html>

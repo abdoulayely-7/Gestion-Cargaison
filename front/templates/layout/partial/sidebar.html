@@ -1,0 +1,62 @@
+<div class="w-64 bg-white shadow-lg ">
+    <div class="flex items-center px-6 py-4 bg-gradient-to-r from-ocean-600 to-ocean-700">
+        <div class="h-8 w-8 bg-white rounded-lg flex items-center justify-center">
+            <i data-lucide="truck" class="h-5 w-5 text-ocean-600"></i>
+        </div>
+        <span class="ml-3 text-white font-bold text-lg">GPduMonde</span>
+    </div>
+
+    <nav class="mt-6">
+        <a href="/dashboard"
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-ocean-50 hover:text-ocean-700 transition-colors border-r-4 border-ocean-600 bg-ocean-50 text-ocean-700">
+            <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
+            <span class="ml-3">Dashboard</span>
+        </a>
+        <a href="/listecargaison"
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-ocean-50 hover:text-ocean-700 transition-colors">
+            <i data-lucide="ship" class="h-5 w-5"></i>
+            <span class="ml-3">Cargaisons</span>
+        </a>
+        <a href="/colis"
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-ocean-50 hover:text-ocean-700 transition-colors">
+            <i data-lucide="package" class="h-5 w-5"></i>
+            <span class="ml-3">Colis</span>
+        </a>
+        <a href="/clients"
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-ocean-50 hover:text-ocean-700 transition-colors">
+            <i data-lucide="users" class="h-5 w-5"></i>
+            <span class="ml-3">Clients</span>
+        </a>
+        <a href="/recherche"
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-ocean-50 hover:text-ocean-700 transition-colors">
+            <i data-lucide="search" class="h-5 w-5"></i>
+            <span class="ml-3">Recherche</span>
+        </a>
+        <a href="/statistiques"
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-ocean-50 hover:text-ocean-700 transition-colors">
+            <i data-lucide="bar-chart-3" class="h-5 w-5"></i>
+            <span class="ml-3">Statistiques</span>
+        </a>
+        <a href="/parametres"
+            class="flex items-center px-6 py-3 text-gray-700 hover:bg-ocean-50 hover:text-ocean-700 transition-colors">
+            <i data-lucide="settings" class="h-5 w-5"></i>
+            <span class="ml-3">Paramètres</span>
+        </a>
+    </nav>
+
+    <div class="absolute bottom-0 w-64 p-4 border-t border-gray-200">
+        <div class="flex items-center">
+            <div class="h-10 w-10 bg-ocean-100 rounded-full flex items-center justify-center">
+                <i data-lucide="user" class="h-5 w-5 text-ocean-600"></i>
+            </div>
+            <div class="ml-3">
+                <p id="nameGestionnaire" class="text-sm font-medium text-blue-700"></p>
+                <p class="text-xs text-gray-500">Gestionnaire</p>
+            </div>
+            <button id="logout" class="ml-auto text-gray-400 hover:text-gray-600">
+                <i data-lucide="log-out" class="h-5 w-5"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<script src="/dist/pages/sidebar.js" type="module"></script>

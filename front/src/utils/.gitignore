@@ -1,0 +1,4 @@
+front/nodes_modules
+front/dist
+front/.env
+/vendor

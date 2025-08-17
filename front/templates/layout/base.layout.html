@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-gray-50">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPduMonde - Gestion de Cargaisons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="stylesheet"
+            href="https://unpkg.com/leaflet/dist/leaflet.css"
+    />
+
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ocean': {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+
+<body class="h-full font-sans  ">
+    <!-- Sidebar -->
+    <div id="dashboardPage" class=" h-screen flex bg-gray-100 overflow-y-hidden">
+        <?php
+            require_once '../front/templates/layout/partial/sidebar.html';
+        ?>
+        <!-- Contenu principal -->
+        <div class="flex-1 overflow-y-auto">
+            <?php
+                echo $containForLayout;
+            ?>
+        </div>
+    </div>
+
+</body>
+<script>
+    // Initialize lucide icons
+    lucide.createIcons();
+    feather.replace();
+</script>
+
+</html>

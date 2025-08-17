@@ -1,0 +1,8 @@
+{
+  "gestionnaire": [
+    { "id": 1, "email": "ges@gmail.com", "password": "passer", "nom": "Gestionnaire", "prenom": "Test" }
+  ],
+  "cargaisons": [],
+  "colis": [],
+  "users": []
+}

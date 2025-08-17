@@ -1,0 +1,118 @@
+<div id="dashboard-page" class="page-content">
+  <div class="p-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Tableau de bord</h1>
+      <p class="text-gray-600 mt-2">Aperçu de vos activités de transport</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-blue-100">
+            <i data-feather="truck" class="w-6 h-6 text-blue-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Cargaisons actives</p>
+            <p class="text-2xl font-bold text-gray-900">24</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-green-100">
+            <i data-feather="package" class="w-6 h-6 text-green-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Colis en transit</p>
+            <p class="text-2xl font-bold text-gray-900">156</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-yellow-100">
+            <i data-feather="clock" class="w-6 h-6 text-yellow-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">En attente</p>
+            <p class="text-2xl font-bold text-gray-900">12</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-purple-100">
+            <i data-feather="dollar-sign" class="w-6 h-6 text-purple-600"></i>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Revenus du mois</p>
+            <p class="text-2xl font-bold text-gray-900">2.4M FCFA</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphiques et activités récentes -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Cargaisons par type</h3>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Maritime</span>
+            <div class="flex items-center space-x-2">
+              <div class="w-32 bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full" style="width: 60%"></div>
+              </div>
+              <span class="text-sm font-medium">60%</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Aérienne</span>
+            <div class="flex items-center space-x-2">
+              <div class="w-32 bg-gray-200 rounded-full h-2">
+                <div class="bg-green-600 h-2 rounded-full" style="width: 25%"></div>
+              </div>
+              <span class="text-sm font-medium">25%</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Routière</span>
+            <div class="flex items-center space-x-2">
+              <div class="w-32 bg-gray-200 rounded-full h-2">
+                <div class="bg-yellow-600 h-2 rounded-full" style="width: 15%"></div>
+              </div>
+              <span class="text-sm font-medium">15%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Activités récentes</h3>
+        <div class="space-y-4">
+          <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">Cargaison MAR-001 arrivée</p>
+              <p class="text-xs text-gray-500">Il y a 2 heures</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">Nouvelle cargaison AER-045 créée</p>
+              <p class="text-xs text-gray-500">Il y a 4 heures</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
+            <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">Colis COL-789 en retard</p>
+              <p class="text-xs text-gray-500">Il y a 6 heures</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

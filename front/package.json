@@ -1,0 +1,23 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --project tsconfig.json",
+    "start": "node dist/index.js",
+    "watch": "tsc --watch & json-server --watch ../data/db.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/leaflet": "^1.9.20",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4"
+  }
+}

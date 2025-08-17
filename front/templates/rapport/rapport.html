@@ -1,0 +1,127 @@
+<div id="rapports-page" class="page-content">
+  <div class="p-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Rapports et analyses</h1>
+      <p class="text-gray-600 mt-2">Analysez vos performances et générez des rapports</p>
+    </div>
+
+    <!-- Filtres de rapport -->
+    <div class="bg-white rounded-xl p-6 card-shadow mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Période</label>
+          <select
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <option>Ce mois</option>
+            <option>3 derniers mois</option>
+            <option>6 derniers mois</option>
+            <option>Cette année</option>
+            <option>Personnalisé</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Type de rapport</label>
+          <select
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <option>Tous</option>
+            <option>Revenus</option>
+            <option>Cargaisons</option>
+            <option>Performances</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Type de transport</label>
+          <select
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <option>Tous</option>
+            <option>Maritime</option>
+            <option>Aérienne</option>
+            <option>Routière</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+            Générer rapport
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphiques et métriques -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Revenus mensuels -->
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Évolution des revenus</h3>
+        <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+          <div class="text-center text-gray-500">
+            <i data-feather="trending-up" class="w-12 h-12 mx-auto mb-2"></i>
+            <p>Graphique des revenus</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Répartition par type -->
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Répartition par type de transport</h3>
+        <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+          <div class="text-center text-gray-500">
+            <i data-feather="pie-chart" class="w-12 h-12 mx-auto mb-2"></i>
+            <p>Graphique en secteurs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Métriques détaillées -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-xl p-6 card-shadow text-center">
+        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i data-feather="dollar-sign" class="w-6 h-6 text-green-600"></i>
+        </div>
+        <h4 class="font-semibold text-gray-900 mb-2">Revenus totaux</h4>
+        <p class="text-2xl font-bold text-green-600">15.2M FCFA</p>
+        <p class="text-sm text-gray-500 mt-1">+12% ce mois</p>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 card-shadow text-center">
+        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i data-feather="truck" class="w-6 h-6 text-blue-600"></i>
+        </div>
+        <h4 class="font-semibold text-gray-900 mb-2">Cargaisons</h4>
+        <p class="text-2xl font-bold text-blue-600">127</p>
+        <p class="text-sm text-gray-500 mt-1">+8% ce mois</p>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 card-shadow text-center">
+        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i data-feather="package" class="w-6 h-6 text-yellow-600"></i>
+        </div>
+        <h4 class="font-semibold text-gray-900 mb-2">Colis traités</h4>
+        <p class="text-2xl font-bold text-yellow-600">1,543</p>
+        <p class="text-sm text-gray-500 mt-1">+15% ce mois</p>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 card-shadow text-center">
+        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i data-feather="users" class="w-6 h-6 text-purple-600"></i>
+        </div>
+        <h4 class="font-semibold text-gray-900 mb-2">Clients actifs</h4>
+        <p class="text-2xl font-bold text-purple-600">892</p>
+        <p class="text-sm text-gray-500 mt-1">+5% ce mois</p>
+      </div>
+    </div>
+
+    <!-- Actions de rapport -->
+    <div class="flex justify-end space-x-4">
+      <button class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors">
+        <i data-feather="printer" class="w-4 h-4 inline mr-2"></i>
+        Imprimer
+      </button>
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition-colors">
+        <i data-feather="download" class="w-4 h-4 inline mr-2"></i>
+        Exporter PDF
+      </button>
+    </div>
+  </div>
+</div>
