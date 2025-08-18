@@ -7,7 +7,7 @@ export declare class ColisApiManager {
     /**
      * Enregistre un colis via l'API
      */
-    static enregistrerColis(colisData: ColisData): Promise<string>;
+    static enregistrerColis(colisData: ColisData, cargaisonId?: string): Promise<string>;
     /**
      * Génère un code de tracking unique
      */

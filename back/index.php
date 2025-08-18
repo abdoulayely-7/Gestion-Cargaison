@@ -29,3 +29,4 @@ if (str_starts_with($path, '/dist/') || str_starts_with($path, '/public/')) {
 // 2. Sinon → passer au routage PHP
 $routes = Router::init();
 Router::resolve($routes);
+    

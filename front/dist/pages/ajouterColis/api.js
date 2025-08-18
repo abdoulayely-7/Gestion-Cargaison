@@ -1,13 +1,14 @@
 import { showError } from "../../utils/messages.js";
+import { API_URI } from "../../config/environnement.js";
 /**
  * Gestionnaire d'API pour l'enregistrement des colis
  */
 export class ColisApiManager {
-    static API_URL = 'http://localhost:3000/colis';
+    static API_URL = `${API_URI}/api/colis`;
     /**
      * Enregistre un colis via l'API
      */
-    static async enregistrerColis(colisData) {
+    static async enregistrerColis(colisData, cargaisonId) {
         try {
             // Générer un code de suivi unique
             const codeTracking = this.genererCodeTracking();
@@ -31,7 +32,7 @@ export class ColisApiManager {
                 typeCargaison: colisData.typeCargaison,
                 dateEnregistrement: new Date().toISOString(),
                 notes: colisData.notes || '',
-                cargaisonId: null, // Sera attribué lors de l'affectation à une cargaison
+                cargaisonId: cargaisonId || null, // Attribution à une cargaison spécifique
                 prix: colisData.prix
             };
             // Envoyer à l'API
@@ -43,7 +44,8 @@ export class ColisApiManager {
                 body: JSON.stringify(donneesAPI)
             });
             if (response.ok) {
-                return codeTracking;
+                const result = await response.json();
+                return result.code || codeTracking;
             }
             else {
                 throw new Error('Erreur lors de l\'enregistrement');

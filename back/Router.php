@@ -57,7 +57,9 @@ class Router
         } else {
             $this->layout = 'base.layout.html';
         }
-        require_once "../front/templates/layout/$this->layout";
+        
+        // Inclure le layout avec les variables accessibles
+        include "../front/templates/layout/$this->layout";
     }
 
     public static function resolve(array $routes): void

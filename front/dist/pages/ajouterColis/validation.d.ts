@@ -7,6 +7,14 @@ export declare class FormValidator {
      */
     static validerChamps(champs: string[]): boolean;
     /**
+     * Gère les attributs required selon l'étape active pour éviter la validation des champs cachés
+     */
+    static gererAttributsRequired(etapeActive: number): void;
+    /**
+     * Valide uniquement l'étape visible pour éviter les erreurs de focus
+     */
+    static validerEtapeVisible(etape: number): boolean;
+    /**
      * Valide l'étape expéditeur
      */
     static validerEtapeExpediteur(): boolean;

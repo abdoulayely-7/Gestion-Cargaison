@@ -1,3 +1,4 @@
+import { FormValidator } from './validation.js';
 /**
  * Gestionnaire de navigation entre les étapes du formulaire
  */
@@ -45,6 +46,8 @@ export class StepNavigator {
             etapeElement.classList.remove('hidden');
             etapeElement.classList.add('fade-in');
         }
+        // Gérer les attributs required pour éviter la validation des champs cachés
+        FormValidator.gererAttributsRequired(etape);
     }
     /**
      * Mettre à jour les indicateurs d'étapes

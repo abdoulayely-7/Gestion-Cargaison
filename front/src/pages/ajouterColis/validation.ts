@@ -22,6 +22,53 @@ export class FormValidator {
     }
 
     /**
+     * Gère les attributs required selon l'étape active pour éviter la validation des champs cachés
+     */
+    static gererAttributsRequired(etapeActive: number): void {
+        // Définir les champs requis par étape
+        const champsParEtape = {
+            1: ['expediteur_nom', 'expediteur_prenom', 'expediteur_telephone', 'expediteur_adresse'],
+            2: ['destinataire_nom', 'destinataire_prenom', 'destinataire_telephone', 'destinataire_adresse'],
+            3: ['nombre_colis', 'poids', 'type_produit', 'type_cargaison', 'libelle_produit'],
+            4: [] // Étape de confirmation, pas de champs requis supplémentaires
+        };
+
+        // Retirer tous les attributs required
+        const tousLesChamps = document.querySelectorAll('[required]');
+        tousLesChamps.forEach(champ => {
+            champ.removeAttribute('required');
+            (champ as HTMLElement).dataset.wasRequired = 'true';
+        });
+
+        // Remettre required uniquement pour les champs de l'étape active
+        const champsEtapeActive = champsParEtape[etapeActive as keyof typeof champsParEtape] || [];
+        champsEtapeActive.forEach(champId => {
+            const element = document.getElementById(champId);
+            if (element && element.dataset.wasRequired === 'true') {
+                element.setAttribute('required', '');
+            }
+        });
+    }
+
+    /**
+     * Valide uniquement l'étape visible pour éviter les erreurs de focus
+     */
+    static validerEtapeVisible(etape: number): boolean {
+        switch (etape) {
+            case 1:
+                return this.validerEtapeExpediteur();
+            case 2:
+                return this.validerEtapeDestinataire();
+            case 3:
+                return this.validerEtapeColis();
+            case 4:
+                return true; // Étape de confirmation
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Valide l'étape expéditeur
      */
     static validerEtapeExpediteur(): boolean {
