@@ -7,6 +7,7 @@
     <title>GPduMonde - Gestion de Cargaisons</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <link rel="stylesheet"
             href="https://unpkg.com/leaflet/dist/leaflet.css"
     />
@@ -57,5 +58,10 @@
     lucide.createIcons();
     feather.replace();
 </script>
+
+<!-- Scripts spécifiques aux pages -->
+<?php if (isset($pageScript)): ?>
+    <script type="module" src="<?php echo $pageScript; ?>"></script>
+<?php endif; ?>
 
 </html>
