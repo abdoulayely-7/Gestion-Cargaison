@@ -8,7 +8,7 @@
                         </div>
                         <button
                             class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                            <i data-feather="plus" class="w-4 h-4 inline mr-2"></i>
+                            <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
                             Nouvelle cargaison
                         </button>
                     </div>
@@ -18,33 +18,33 @@
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
-                                <select
+                                <select id="type-filter"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option>Tous les types</option>
-                                    <option>Maritime</option>
-                                    <option>Aérienne</option>
-                                    <option>Routière</option>
+                                    <option value="tous">Tous les types</option>
+                                    <option value="MARITIME">Maritime</option>
+                                    <option value="AERIEN">Aérien</option>
+                                    <option value="ROUTIER">Routier</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">État</label>
-                                <select
+                                <select id="etat-filter"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option>Tous les états</option>
-                                    <option>Ouverte</option>
-                                    <option>Fermée</option>
-                                    <option>En transit</option>
-                                    <option>Arrivée</option>
+                                    <option value="tous">Tous les états</option>
+                                    <option value="EN_ATTENTE">En attente</option>
+                                    <option value="EN_COURS">En cours</option>
+                                    <option value="TRANSPORT">En transit</option>
+                                    <option value="LIVRE">Arrivée</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Lieu de départ</label>
-                                <input type="text" placeholder="Rechercher..."
+                                <input type="text" id="depart-filter" placeholder="Rechercher..."
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Destination</label>
-                                <input type="text" placeholder="Rechercher..."
+                                <input type="text" id="destination-filter" placeholder="Rechercher..."
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                         </div>
@@ -79,67 +79,8 @@
                                             Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            MAR-001</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                <i data-feather="anchor" class="w-3 h-3 mr-1"></i>
-                                                Maritime
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            <div>Dakar → Marseille</div>
-                                            <div class="text-xs text-gray-500">4,250 km</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">8/10</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 status-badge">
-                                                En transit
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            850,000 FCFA</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div class="flex space-x-2">
-                                                <button class="text-indigo-600 hover:text-indigo-900">Voir</button>
-                                                <button class="text-gray-600 hover:text-gray-900">Modifier</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            AER-045</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                <i data-feather="zap" class="w-3 h-3 mr-1"></i>
-                                                Aérienne
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            <div>Dakar → Paris</div>
-                                            <div class="text-xs text-gray-500">4,126 km</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5/10</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                Ouverte
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            1,250,000 FCFA</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div class="flex space-x-2">
-                                                <button class="text-indigo-600 hover:text-indigo-900">Voir</button>
-                                                <button class="text-gray-600 hover:text-gray-900">Modifier</button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                <tbody id="cargaisons-table-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Les cargaisons seront chargées dynamiquement ici -->
                                 </tbody>
                             </table>
                         </div>

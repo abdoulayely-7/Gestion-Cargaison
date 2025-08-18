@@ -1,0 +1,1 @@
+{"version":3,"file":"tarifs.d.ts","sourceRoot":"","sources":["../../../src/pages/ajouterColis/tarifs.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,gBAAgB,EAAE,MAAM,YAAY,CAAC;AAGnD,eAAO,MAAM,aAAa;;IAGtB;;OAEG;0BACmB,MAAM,eAAe,MAAM,iBAAiB,MAAM,aAAY,MAAM,KAAS,MAAM;IA2BzG;;OAEG;sCAC+B,MAAM,mBAAmB,MAAM,GAAG,SAAS,iBAAiB,MAAM,KAAG,gBAAgB;CAuB1H,CAAC"}

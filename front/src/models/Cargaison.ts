@@ -17,9 +17,10 @@ export class Cargaison {
         public lieuDepart: string,
         public lieuArrivee: string,
         public distance: number,
+        
         public etatAvancement: CargaisonEtatAvancement = CargaisonEtatAvancement.EN_ATTENTE,
         public dateDepart?: string ,
-        public dateArrivee?: string
+        public dateArrivee?: string 
     ) {
         this.numero = `CARG${Date.now()}`;
         this.colis = [];

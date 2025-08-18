@@ -17,6 +17,9 @@ class Router
             '/parametres' => 'parametre/parametre',
             '/newcargaison' => 'cargaison/newcargaison',
             '/listecargaison' => 'cargaison/listecargaisons',
+            '/listecolis' => 'colis/listecolis',
+            '/ajoutercolis' => 'colis/ajoutercolis'
+
         ];
     }
 
@@ -24,6 +27,25 @@ class Router
     {
         $chemin  = "../front/templates/$view.html";
         $uri = $_SERVER["REQUEST_URI"];
+        
+        // Définir les scripts spécifiques aux pages
+        $pageScript = null;
+        switch($uri) {
+            case '/listecargaison':
+                $pageScript = '/dist/pages/listeCargaisons.js';
+                break;
+            case '/listecolis':
+                $pageScript = '/dist/pages/listeColis.js';
+                break;
+            case '/recherche':
+                $pageScript = '/dist/pages/colis.js';
+                break;
+            case '/ajoutercolis':
+                $pageScript = '/dist/pages/ajouterColis.js';
+                break;
+            // Ajouter d'autres pages selon les besoins
+        }
+        
         ob_start();
         if (!file_exists($chemin)) {
             throw new \Exception("View file not found: $view");
