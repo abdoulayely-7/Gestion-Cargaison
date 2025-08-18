@@ -49,6 +49,50 @@ interface CargaisonAPIResponse {
  * Récupère tous les colis depuis l'API
  */
 export declare function obtenirTousColis(): Promise<any[]>;
+/**
+ * Marquer un colis comme récupéré
+ */
+export declare function marquerColisRecupere(id: number): Promise<any>;
+/**
+ * Marquer un colis comme perdu
+ */
+export declare function marquerColisPerdu(id: number, raisonPerte: string): Promise<any>;
+/**
+ * Archiver un colis manuellement
+ */
+export declare function archiverColis(id: number): Promise<any>;
+/**
+ * Changer l'état d'un colis
+ */
+export declare function changerEtatColis(id: number, nouvelEtat: string): Promise<any>;
+/**
+ * Obtenir un colis par son ID
+ */
+export declare function obtenirColisParId(id: number): Promise<any | null>;
+/**
+ * Annuler un colis (seulement si la cargaison n'est pas fermée)
+ */
+export declare function annulerColis(id: number): Promise<any>;
+/**
+ * Calculer les informations d'avancement détaillées
+ */
+export declare function calculerInfosAvancement(colis: any, cargaison: any): {
+    etat: string;
+    message: string;
+    estimation?: string;
+    retard?: string;
+    pourcentage: number;
+};
+/**
+ * Rechercher un colis par code avec informations complètes
+ */
+export declare function rechercherColisAvecInfos(code: string): Promise<{
+    colis: any | null;
+    cargaison: any | null;
+    infosAvancement: any | null;
+    existe: boolean;
+    message?: string;
+}>;
 export declare function rechercherParCode(code: string): Promise<ColisAPIResponse | null>;
 export declare function obtenirCargaison(cargaisonId: number): Promise<CargaisonAPIResponse | null>;
 export declare function obtenirProgressionEtat(etatCargaison: string): {

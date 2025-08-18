@@ -137,6 +137,71 @@ export async function supprimerCargaison(id: number): Promise<void> {
 }
 
 /**
+ * Ferme une cargaison (change l'état global à "Fermé")
+ */
+export async function fermerCargaison(id: number): Promise<Cargaison> {
+    try {
+        const response = await fetch(`${API_BASE_URL}/cargaisons/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ etatGlobal: 'Fermé' }),
+        });
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        const cargaisonMiseAJour = await response.json();
+        return cargaisonMiseAJour;
+    } catch (error) {
+        console.error('Erreur lors de la fermeture de la cargaison:', error);
+        throw error;
+    }
+}
+
+/**
+ * Rouvre une cargaison (change l'état global à "Ouvert")
+ * Seulement possible si l'état d'avancement est "En attente"
+ */
+export async function rouvrirCargaison(id: number): Promise<Cargaison> {
+    try {
+        // Vérifier d'abord l'état d'avancement de la cargaison
+        const cargaison = await obtenirCargaisonParId(id);
+        if (!cargaison) {
+            throw new Error('Cargaison non trouvée');
+        }
+        
+        if (cargaison.etatAvancement.toLowerCase() !== 'en attente') {
+            throw new Error('Une cargaison ne peut être rouverte que si son état d\'avancement est "En attente"');
+        }
+
+        const response = await fetch(`${API_BASE_URL}/cargaisons/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ etatGlobal: 'Ouvert' }),
+        });
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        const cargaisonMiseAJour = await response.json();
+        return cargaisonMiseAJour;
+    } catch (error) {
+        console.error('Erreur lors de la réouverture de la cargaison:', error);
+        throw error;
+    }
+}
+
+/**
+ * Vérifie si une cargaison peut être rouverte
+ */
+export function peutEtreRouverte(cargaison: any): boolean {
+    return cargaison.etatGlobal?.toLowerCase() === 'fermé' && 
+           cargaison.etatAvancement?.toLowerCase() === 'en attente';
+}
+
+/**
  * Fonction utilitaire pour formater les coordonnées
  */
 export function formaterCoordonnees(lieuDepart: string, lieuArrivee: string): { 

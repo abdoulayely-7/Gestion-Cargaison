@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Colis - Gestion Cargaison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .ocean-gradient {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            background-color: #0891b2;
+            color: white;
+        }
+        .step-indicator.completed {
+            background-color: #10b981;
+            color: white;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tarif-display {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-left: 4px solid #0891b2;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="ocean-gradient text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="../dashboard/dashboard.html" class="flex items-center space-x-2 hover:text-gray-200 transition-colors">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                        <span>Retour</span>
+                    </a>
+                    <div class="h-6 w-px bg-white/30"></div>
+                    <h1 class="text-2xl font-bold">Ajouter un Colis</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <i data-lucide="package-plus" class="w-8 h-8"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu Principal -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Indicateur d'étapes -->
+        <div class="mb-8">
+            <div class="flex items-center justify-center space-x-4">
+                <div class="step-indicator active flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-medium">
+                    1
+                </div>
+                <div class="h-px w-16 bg-gray-300"></div>
+                <div class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-medium">
+                    2
+                </div>
+                <div class="h-px w-16 bg-gray-300"></div>
+                <div class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-medium">
+                    3
+                </div>
+                <div class="h-px w-16 bg-gray-300"></div>
+                <div class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-medium">
+                    4
+                </div>
+            </div>
+            <div class="flex items-center justify-center space-x-8 mt-2">
+                <span class="text-sm font-medium text-cyan-600">Client</span>
+                <span class="text-sm text-gray-500">Destinataire</span>
+                <span class="text-sm text-gray-500">Colis</span>
+                <span class="text-sm text-gray-500">Confirmation</span>
+            </div>
+        </div>
+
+        <!-- Formulaire -->
+        <form id="ajouterColisForm" class="space-y-8">
+            <!-- Étape 1: Informations du Client (Expéditeur) -->
+            <div id="etape1" class="fade-in">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                        <i data-lucide="user" class="h-5 w-5 text-cyan-600 mr-2"></i>
+                        Informations du Client (Expéditeur)
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                            <input type="text" id="expediteur_nom" name="expediteur_nom" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: Diallo">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                            <input type="text" id="expediteur_prenom" name="expediteur_prenom" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: Amadou">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone *</label>
+                            <input type="tel" id="expediteur_telephone" name="expediteur_telephone" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: 77 123 45 67">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email (facultatif)</label>
+                            <input type="email" id="expediteur_email" name="expediteur_email"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: amadou.diallo@email.com">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Adresse *</label>
+                            <textarea id="expediteur_adresse" name="expediteur_adresse" rows="3" required
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                      placeholder="Ex: Rue 10, Parcelles Assainies, Dakar"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end mt-6">
+                        <button type="button" onclick="allerEtapeSuivante(2)" class="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+                            Suivant
+                            <i data-lucide="arrow-right" class="w-4 h-4 ml-2 inline"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 2: Informations du Destinataire -->
+            <div id="etape2" class="fade-in hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                        <i data-lucide="user-check" class="h-5 w-5 text-cyan-600 mr-2"></i>
+                        Informations du Destinataire
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                            <input type="text" id="destinataire_nom" name="destinataire_nom" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: Ba">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                            <input type="text" id="destinataire_prenom" name="destinataire_prenom" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: Mariama">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone *</label>
+                            <input type="tel" id="destinataire_telephone" name="destinataire_telephone" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: 76 987 65 43">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email (facultatif)</label>
+                            <input type="email" id="destinataire_email" name="destinataire_email"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: mariama.ba@email.com">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Adresse *</label>
+                            <textarea id="destinataire_adresse" name="destinataire_adresse" rows="3" required
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                      placeholder="Ex: Avenue Cheikh Anta Diop, Dakar"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="allerEtapePrecedente(1)" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i data-lucide="arrow-left" class="w-4 h-4 mr-2 inline"></i>
+                            Précédent
+                        </button>
+                        <button type="button" onclick="allerEtapeSuivante(3)" class="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+                            Suivant
+                            <i data-lucide="arrow-right" class="w-4 h-4 ml-2 inline"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 3: Informations du Colis -->
+            <div id="etape3" class="fade-in hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                        <i data-lucide="package" class="h-5 w-5 text-cyan-600 mr-2"></i>
+                        Informations du Colis
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de Colis *</label>
+                            <input type="number" id="nombre_colis" name="nombre_colis" min="1" value="1" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   onchange="calculerTarif()">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Poids Total (kg) *</label>
+                            <input type="number" id="poids" name="poids" min="0.1" step="0.1" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: 5.5" onchange="calculerTarif()">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Type de Produit *</label>
+                            <select id="type_produit" name="type_produit" required onchange="afficherSousOptions(); calculerTarif(); afficherContraintesMetier()"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500">
+                                <option value="">Sélectionner</option>
+                                <option value="alimentaire">Alimentaire</option>
+                                <option value="chimique">Chimique</option>
+                                <option value="materiel">Matériel</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Sous-options pour Matériel -->
+                        <div id="sous_options_materiel" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Type de Matériel *</label>
+                            <select id="sous_type_materiel" name="sous_type_materiel"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                    onchange="calculerTarif(); afficherContraintesMetier()">
+                                <option value="">Sélectionner</option>
+                                <option value="fragile">Fragile</option>
+                                <option value="incassable">Incassable</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Degré de toxicité pour Chimique -->
+                        <div id="degre_toxicite" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Degré de Toxicité (1-5) *</label>
+                            <select id="toxicite" name="toxicite"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                    onchange="calculerTarif()">
+                                <option value="">Sélectionner</option>
+                                <option value="1">1 - Très faible</option>
+                                <option value="2">2 - Faible</option>
+                                <option value="3">3 - Modéré</option>
+                                <option value="4">4 - Élevé</option>
+                                <option value="5">5 - Très élevé</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Type de Cargaison *</label>
+                            <select id="type_cargaison" name="type_cargaison" required onchange="calculerTarif(); afficherContraintesMetier()"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500">
+                                <option value="">Sélectionner</option>
+                                <option value="maritime">Maritime</option>
+                                <option value="aerien">Aérien</option>
+                                <option value="routier">Routier</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Alertes contraintes métier -->
+                        <div id="contraintes_info" class="md:col-span-2 lg:col-span-3 hidden">
+                            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 mr-2 mt-0.5"></i>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-amber-800">Contraintes à respecter</h4>
+                                        <div id="contraintes_details" class="text-sm text-amber-700 mt-1">
+                                            <!-- Contenu généré dynamiquement -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:col-span-2 lg:col-span-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Libellé du Produit *</label>
+                            <input type="text" id="libelle_produit" name="libelle_produit" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                   placeholder="Ex: Ordinateurs portables, Riz parfumé, etc.">
+                        </div>
+                        
+                        <div class="md:col-span-2 lg:col-span-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Notes / Instructions (facultatif)</label>
+                            <textarea id="notes" name="notes" rows="3"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                                      placeholder="Ex: Fragile, à manipuler avec soin"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Affichage du tarif -->
+                    <div id="affichage_tarif" class="mt-6 p-4 tarif-display rounded-lg hidden">
+                        <h4 class="font-medium text-gray-900 mb-2">Calcul du Tarif</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-600">Prix de base:</span>
+                                <span id="prix_base" class="font-medium text-gray-900 ml-2">-</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Prix calculé:</span>
+                                <span id="prix_calcule" class="font-medium text-gray-900 ml-2">-</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Prix final:</span>
+                                <span id="prix_final" class="font-bold text-cyan-700 ml-2 text-lg">-</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Prix minimum: 10.000 FCFA par colis</p>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="allerEtapePrecedente(2)" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i data-lucide="arrow-left" class="w-4 h-4 mr-2 inline"></i>
+                            Précédent
+                        </button>
+                        <button type="button" onclick="allerEtapeSuivante(4)" class="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+                            Suivant
+                            <i data-lucide="arrow-right" class="w-4 h-4 ml-2 inline"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 4: Confirmation et Génération -->
+            <div id="etape4" class="fade-in hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                        <i data-lucide="check-circle" class="h-5 w-5 text-green-600 mr-2"></i>
+                        Confirmation et Génération du Reçu
+                    </h3>
+                    
+                    <!-- Récapitulatif -->
+                    <div id="recapitulatif" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Informations Client -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-3">Expéditeur</h4>
+                            <div id="recap_expediteur" class="space-y-1 text-sm text-gray-600">
+                                <!-- Contenu généré dynamiquement -->
+                            </div>
+                        </div>
+                        
+                        <!-- Informations Destinataire -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-3">Destinataire</h4>
+                            <div id="recap_destinataire" class="space-y-1 text-sm text-gray-600">
+                                <!-- Contenu généré dynamiquement -->
+                            </div>
+                        </div>
+                        
+                        <!-- Informations Colis -->
+                        <div class="bg-gray-50 p-4 rounded-lg lg:col-span-2">
+                            <h4 class="font-medium text-gray-900 mb-3">Colis</h4>
+                            <div id="recap_colis" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                                <!-- Contenu généré dynamiquement -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex justify-between">
+                        <button type="button" onclick="allerEtapePrecedente(3)" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i data-lucide="arrow-left" class="w-4 h-4 mr-2 inline"></i>
+                            Précédent
+                        </button>
+                        <div class="space-x-4">
+                            <button type="button" onclick="annulerFormulaire()" class="px-6 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors">
+                                <i data-lucide="x" class="w-4 h-4 mr-2 inline"></i>
+                                Annuler
+                            </button>
+                            <button type="submit" class="px-8 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                <i data-lucide="save" class="w-4 h-4 mr-2 inline"></i>
+                                Enregistrer le Colis
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Messages -->
+        <div id="messageContainer" class="fixed top-4 right-4 z-50"></div>
+    </div>
+
+    <!-- Modal de succès -->
+    <div id="modalSucces" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="check" class="w-8 h-8 text-green-600"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Colis Enregistré avec Succès!</h3>
+                <p class="text-gray-600 mb-4">Code de suivi: <span id="codeGenere" class="font-mono font-bold text-cyan-600"></span></p>
+                <div class="space-y-3">
+                    <button onclick="genererRecu()" class="w-full px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+                        <i data-lucide="printer" class="w-4 h-4 mr-2 inline"></i>
+                        Imprimer le Reçu
+                    </button>
+                    <button onclick="nouveauColis()" class="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i data-lucide="plus" class="w-4 h-4 mr-2 inline"></i>
+                        Ajouter un Autre Colis
+                    </button>
+                    <button onclick="retourDashboard()" class="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                        <i data-lucide="home" class="w-4 h-4 mr-2 inline"></i>
+                        Retour au Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../../src/pages/ajouterColis.js"></script>
+</body>
+
+</html>

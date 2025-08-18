@@ -31,10 +31,6 @@ interface ColisAPIResponse {
     cargaisonId: number;
 }
 /**
- * Récupère tous les colis depuis l'API
- */
-export declare function obtenirTousLesColis(): Promise<ColisAPIResponse[]>;
-/**
  * Récupère un colis par son code
  */
 export declare function obtenirColisParCode(code: string): Promise<ColisAPIResponse | null>;

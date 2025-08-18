@@ -1,4 +1,12 @@
 import { Colis } from "../models/Colis.js";
+import { 
+    obtenirTousColis,
+    marquerColisRecupere,
+    marquerColisPerdu,
+    archiverColis,
+    changerEtatColis,
+    obtenirColisParId
+} from "../api/colis/colis.js";
 
 // Interface pour la réponse API des colis
 interface ColisAPIResponse {
@@ -49,19 +57,112 @@ let destinataireFilter: HTMLInputElement;
 let codeFilter: HTMLInputElement;
 
 /**
- * Récupère tous les colis depuis l'API
+ * Fonctions utilitaires
  */
-export async function obtenirTousLesColis(): Promise<ColisAPIResponse[]> {
-    try {
-        const response = await fetch(`${API_BASE_URL}/colis`);
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP: ${response.status}`);
+
+// Fonction pour afficher les messages à l'utilisateur
+function afficherMessage(message: string, type: 'success' | 'error' | 'warning' | 'info'): void {
+    // Créer un élément de notification
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 p-4 rounded-md shadow-lg z-50 ${getMessageClasses(type)}`;
+    notification.textContent = message;
+    
+    // Ajouter à la page
+    document.body.appendChild(notification);
+    
+    // Supprimer après 3 secondes
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
         }
-        const colis = await response.json();
-        return colis;
+    }, 3000);
+}
+
+// Obtenir les classes CSS selon le type de message
+function getMessageClasses(type: string): string {
+    switch (type) {
+        case 'success': return 'bg-green-100 text-green-800 border border-green-300';
+        case 'error': return 'bg-red-100 text-red-800 border border-red-300';
+        case 'warning': return 'bg-yellow-100 text-yellow-800 border border-yellow-300';
+        case 'info': return 'bg-blue-100 text-blue-800 border border-blue-300';
+        default: return 'bg-gray-100 text-gray-800 border border-gray-300';
+    }
+}
+
+/**
+ * Fonctions de gestion des états des colis
+ */
+
+// Marquer un colis comme récupéré
+async function marquerCommeRecupere(id: number): Promise<void> {
+    try {
+        await marquerColisRecupere(id);
+        await chargerColis(); // Recharger la liste
+        afficherMessage('Colis marqué comme récupéré avec succès', 'success');
     } catch (error) {
-        console.error('Erreur lors de la récupération des colis:', error);
-        throw error;
+        console.error('Erreur lors de la récupération du colis:', error);
+        afficherMessage('Erreur lors de la récupération du colis', 'error');
+    }
+}
+
+// Marquer un colis comme perdu
+async function marquerCommePerdu(id: number): Promise<void> {
+    const raison = prompt('Veuillez indiquer la raison de la perte :');
+    if (raison) {
+        try {
+            await marquerColisPerdu(id, raison);
+            await chargerColis(); // Recharger la liste
+            afficherMessage('Colis marqué comme perdu', 'warning');
+        } catch (error) {
+            console.error('Erreur lors du marquage du colis comme perdu:', error);
+            afficherMessage('Erreur lors du marquage du colis comme perdu', 'error');
+        }
+    }
+}
+
+// Archiver un colis manuellement
+async function archiverColisManuel(id: number): Promise<void> {
+    if (confirm('Êtes-vous sûr de vouloir archiver ce colis ?')) {
+        try {
+            await archiverColis(id);
+            await chargerColis(); // Recharger la liste
+            afficherMessage('Colis archivé avec succès', 'success');
+        } catch (error) {
+            console.error('Erreur lors de l\'archivage du colis:', error);
+            afficherMessage('Erreur lors de l\'archivage du colis', 'error');
+        }
+    }
+}
+
+// Changer l'état d'un colis
+async function changerEtatColisAction(id: number): Promise<void> {
+    const etatsDisponibles = [
+        'En attente',
+        'En cours',
+        'En transit', 
+        'Livré',
+        'Récupéré',
+        'Perdu',
+        'Archivé'
+    ];
+    
+    const choix = prompt(`Choisissez un nouvel état :\n${etatsDisponibles.map((e, i) => `${i + 1}. ${e}`).join('\n')}`);
+    
+    if (choix) {
+        const index = parseInt(choix) - 1;
+        if (index >= 0 && index < etatsDisponibles.length) {
+            const nouvelEtat = etatsDisponibles[index]!; // Assertion non-null car on vérifie l'index
+            try {
+                await changerEtatColis(id, nouvelEtat);
+                await chargerColis(); // Recharger la liste
+                afficherMessage(`État du colis changé vers "${nouvelEtat}"`, 'success');
+            } catch (error) {
+                console.error('Erreur lors du changement d\'état:', error);
+                afficherMessage('Erreur lors du changement d\'état', 'error');
+            }
+        } else {
+            afficherMessage('Choix invalide', 'error');
+        }
     }
 }
 
@@ -284,9 +385,35 @@ export function afficherColis(colis: ColisAPIResponse[]): void {
                 ${formaterDate(col.dateEnregistrement)}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex space-x-2">
-                    <button onclick="event.stopPropagation(); voirDetailsColis(${col.id})" class="text-indigo-600 hover:text-indigo-900">Voir</button>
-                    <button onclick="event.stopPropagation(); modifierColis(${col.id})" class="text-gray-600 hover:text-gray-900">Modifier</button>
+                <div class="flex space-x-1 justify-end">
+                    <button onclick="event.stopPropagation(); voirDetailsColis(${col.id})" 
+                            class="text-indigo-600 hover:text-indigo-900 p-1" title="Voir détails">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="event.stopPropagation(); changerEtatColisAction(${col.id})" 
+                            class="text-blue-600 hover:text-blue-900 p-1" title="Changer état">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                    </button>
+                    ${col.etat !== 'Récupéré' ? `
+                    <button onclick="event.stopPropagation(); marquerCommeRecupere(${col.id})" 
+                            class="text-green-600 hover:text-green-900 p-1" title="Marquer comme récupéré">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    </button>
+                    ` : ''}
+                    ${col.etat !== 'Perdu' ? `
+                    <button onclick="event.stopPropagation(); marquerCommePerdu(${col.id})" 
+                            class="text-red-600 hover:text-red-900 p-1" title="Marquer comme perdu">
+                        <i data-lucide="x-circle" class="w-4 h-4"></i>
+                    </button>
+                    ` : ''}
+                    ${col.etat !== 'Archivé' ? `
+                    <button onclick="event.stopPropagation(); archiverColisManuel(${col.id})" 
+                            class="text-gray-600 hover:text-gray-900 p-1" title="Archiver">
+                        <i data-lucide="archive" class="w-4 h-4"></i>
+                    </button>
+                    ` : ''}
+                </div>
+            </td>
                 </div>
             </td>
         </tr>
@@ -326,7 +453,7 @@ export async function filtrerParEtat(etat: string): Promise<void> {
     try {
         afficherChargement();
         if (etat === 'tous' || etat === '') {
-            colisData = await obtenirTousLesColis();
+            colisData = await obtenirTousColis();
         } else {
             colisData = await obtenirColisParEtat(etat);
         }
@@ -364,7 +491,7 @@ function initialiserEvenements(): void {
 async function chargerColis(): Promise<void> {
     try {
         afficherChargement();
-        colisData = await obtenirTousLesColis();
+        colisData = await obtenirTousColis();
         filteredColis = [...colisData];
         afficherColis(filteredColis);
     } catch (error) {
@@ -433,6 +560,10 @@ document.addEventListener('DOMContentLoaded', () => {
 (window as any).voirDetailsColis = voirDetailsColis;
 (window as any).modifierColis = modifierColis;
 (window as any).rafraichirColis = rafraichirColis;
+(window as any).marquerCommeRecupere = marquerCommeRecupere;
+(window as any).marquerCommePerdu = marquerCommePerdu;
+(window as any).archiverColisManuel = archiverColisManuel;
+(window as any).changerEtatColisAction = changerEtatColisAction;
 
 // Export des fonctions principales
 export {

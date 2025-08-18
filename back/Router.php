@@ -17,7 +17,9 @@ class Router
             '/parametres' => 'parametre/parametre',
             '/newcargaison' => 'cargaison/newcargaison',
             '/listecargaison' => 'cargaison/listecargaisons',
-            '/listecolis' => 'colis/listecolis'
+            '/listecolis' => 'colis/listecolis',
+            '/ajoutercolis' => 'colis/ajoutercolis'
+
         ];
     }
 
@@ -37,6 +39,9 @@ class Router
                 break;
             case '/recherche':
                 $pageScript = '/dist/pages/colis.js';
+                break;
+            case '/ajoutercolis':
+                $pageScript = '/dist/pages/ajouterColis.js';
                 break;
             // Ajouter d'autres pages selon les besoins
         }

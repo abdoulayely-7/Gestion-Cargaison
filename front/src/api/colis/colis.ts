@@ -72,6 +72,365 @@ export async function obtenirTousColis(): Promise<any[]> {
     }
 }
 
+/**
+ * Marquer un colis comme récupéré
+ */
+export async function marquerColisRecupere(id: number): Promise<any> {
+    try {
+        const response = await fetch(`${BASE_URL}/colis/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                etat: 'Récupéré',
+                dateRecuperation: new Date().toISOString()
+            }),
+        });
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Erreur lors de la récupération du colis:', error);
+        throw error;
+    }
+}
+
+/**
+ * Marquer un colis comme perdu
+ */
+export async function marquerColisPerdu(id: number, raisonPerte: string): Promise<any> {
+    try {
+        const response = await fetch(`${BASE_URL}/colis/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                etat: 'Perdu',
+                datePerte: new Date().toISOString(),
+                raisonPerte: raisonPerte
+            }),
+        });
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Erreur lors du marquage du colis comme perdu:', error);
+        throw error;
+    }
+}
+
+/**
+ * Archiver un colis manuellement
+ */
+export async function archiverColis(id: number): Promise<any> {
+    try {
+        const response = await fetch(`${BASE_URL}/colis/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                etat: 'Archivé',
+                dateArchivage: new Date().toISOString(),
+                archivageManuel: true
+            }),
+        });
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Erreur lors de l\'archivage du colis:', error);
+        throw error;
+    }
+}
+
+/**
+ * Changer l'état d'un colis
+ */
+export async function changerEtatColis(id: number, nouvelEtat: string): Promise<any> {
+    try {
+        const response = await fetch(`${BASE_URL}/colis/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                etat: nouvelEtat,
+                dateChangementEtat: new Date().toISOString()
+            }),
+        });
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Erreur lors du changement d\'état du colis:', error);
+        throw error;
+    }
+}
+
+/**
+ * Obtenir un colis par son ID
+ */
+export async function obtenirColisParId(id: number): Promise<any | null> {
+    try {
+        const response = await fetch(`${BASE_URL}/colis/${id}`);
+        if (!response.ok) {
+            if (response.status === 404) {
+                return null;
+            }
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        const colis = await response.json();
+        return colis;
+    } catch (error) {
+        console.error('Erreur lors de la récupération du colis:', error);
+        throw error;
+    }
+}
+
+/**
+ * Annuler un colis (seulement si la cargaison n'est pas fermée)
+ */
+export async function annulerColis(id: number): Promise<any> {
+    try {
+        // D'abord, récupérer le colis pour vérifier sa cargaison
+        const colis = await obtenirColisParId(id);
+        if (!colis) {
+            throw new Error('Colis non trouvé');
+        }
+
+        // Récupérer la cargaison pour vérifier son état
+        const cargaisonResponse = await fetch(`${BASE_URL}/cargaisons/${colis.cargaisonId}`);
+        if (!cargaisonResponse.ok) {
+            throw new Error('Cargaison non trouvée');
+        }
+        const cargaison = await cargaisonResponse.json();
+
+        // Vérifier si la cargaison est fermée
+        if (cargaison.etatGlobal === 'Fermé') {
+            throw new Error('Impossible d\'annuler : la cargaison est fermée');
+        }
+
+        // Annuler le colis
+        const response = await fetch(`${BASE_URL}/colis/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                etat: 'Annulé',
+                dateAnnulation: new Date().toISOString()
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Erreur lors de l\'annulation du colis:', error);
+        throw error;
+    }
+}
+
+/**
+ * Calculer les informations d'avancement détaillées
+ */
+export function calculerInfosAvancement(colis: any, cargaison: any): {
+    etat: string;
+    message: string;
+    estimation?: string;
+    retard?: string;
+    pourcentage: number;
+} {
+    const maintenant = new Date();
+    const dateDepart = cargaison.dateDepart ? new Date(cargaison.dateDepart) : null;
+    const dateArrivee = cargaison.dateArrivee ? new Date(cargaison.dateArrivee) : null;
+
+    switch (colis.etat.toLowerCase()) {
+        case 'en attente':
+            return {
+                etat: 'En attente',
+                message: 'Votre colis est enregistré et en attente de traitement',
+                pourcentage: 10
+            };
+
+        case 'en cours':
+            if (dateArrivee) {
+                const diffTime = dateArrivee.getTime() - maintenant.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+
+                if (diffTime > 0) {
+                    // En avance ou à l'heure
+                    if (diffDays > 1) {
+                        return {
+                            etat: 'En cours',
+                            message: 'Votre colis est en transit',
+                            estimation: `Arrive dans ${diffDays} jours`,
+                            pourcentage: 50
+                        };
+                    } else if (diffHours > 1) {
+                        return {
+                            etat: 'En cours',
+                            message: 'Votre colis est en transit',
+                            estimation: `Arrive dans ${diffHours} heures`,
+                            pourcentage: 75
+                        };
+                    } else {
+                        return {
+                            etat: 'En cours',
+                            message: 'Votre colis arrive bientôt',
+                            estimation: 'Arrive dans moins d\'une heure',
+                            pourcentage: 90
+                        };
+                    }
+                } else {
+                    // En retard
+                    const retardDays = Math.abs(diffDays);
+                    const retardHours = Math.abs(diffHours);
+                    
+                    if (retardDays > 1) {
+                        return {
+                            etat: 'En cours',
+                            message: 'Votre colis est en transit',
+                            retard: `En retard de ${retardDays} jours`,
+                            pourcentage: 60
+                        };
+                    } else {
+                        return {
+                            etat: 'En cours',
+                            message: 'Votre colis est en transit',
+                            retard: `En retard de ${retardHours} heures`,
+                            pourcentage: 60
+                        };
+                    }
+                }
+            } else {
+                return {
+                    etat: 'En cours',
+                    message: 'Votre colis est en transit',
+                    pourcentage: 50
+                };
+            }
+
+        case 'arrivé':
+        case 'livré':
+            return {
+                etat: 'Arrivé',
+                message: 'Votre colis est arrivé à destination et peut être récupéré',
+                pourcentage: 100
+            };
+
+        case 'récupéré':
+            return {
+                etat: 'Récupéré',
+                message: 'Votre colis a été récupéré avec succès',
+                pourcentage: 100
+            };
+
+        case 'perdu':
+            return {
+                etat: 'Perdu',
+                message: 'Malheureusement, votre colis a été signalé comme perdu. Veuillez contacter notre service client.',
+                pourcentage: 0
+            };
+
+        case 'archivé':
+            return {
+                etat: 'Archivé',
+                message: 'Votre colis a été archivé',
+                pourcentage: 100
+            };
+
+        case 'annulé':
+            return {
+                etat: 'Annulé',
+                message: 'Votre colis a été annulé',
+                pourcentage: 0
+            };
+
+        default:
+            return {
+                etat: 'Inconnu',
+                message: 'État inconnu',
+                pourcentage: 0
+            };
+    }
+}
+
+/**
+ * Rechercher un colis par code avec informations complètes
+ */
+export async function rechercherColisAvecInfos(code: string): Promise<{
+    colis: any | null;
+    cargaison: any | null;
+    infosAvancement: any | null;
+    existe: boolean;
+    message?: string;
+}> {
+    try {
+        // Rechercher le colis par code
+        const colisResponse = await fetch(`${BASE_URL}/colis?code=${code}`);
+        if (!colisResponse.ok) {
+            throw new Error(`Erreur HTTP: ${colisResponse.status}`);
+        }
+        
+        const colisList = await colisResponse.json();
+        
+        if (colisList.length === 0) {
+            return {
+                colis: null,
+                cargaison: null,
+                infosAvancement: null,
+                existe: false,
+                message: "Aucun colis trouvé avec ce code. Veuillez vérifier le code saisi."
+            };
+        }
+
+        const colis = colisList[0];
+
+        // Vérifier si le colis est annulé
+        if (colis.etat === 'Annulé') {
+            return {
+                colis: colis,
+                cargaison: null,
+                infosAvancement: null,
+                existe: false,
+                message: "Ce colis a été annulé. Pour plus d'informations, veuillez contacter notre service client."
+            };
+        }
+
+        // Récupérer la cargaison associée
+        const cargaisonResponse = await fetch(`${BASE_URL}/cargaisons/${colis.cargaisonId}`);
+        let cargaison = null;
+        
+        if (cargaisonResponse.ok) {
+            cargaison = await cargaisonResponse.json();
+        }
+
+        // Calculer les informations d'avancement
+        const infosAvancement = calculerInfosAvancement(colis, cargaison || {});
+
+        return {
+            colis: colis,
+            cargaison: cargaison,
+            infosAvancement: infosAvancement,
+            existe: true
+        };
+
+    } catch (error) {
+        console.error('Erreur lors de la recherche du colis:', error);
+        throw error;
+    }
+}
+
 export async function rechercherParCode(code: string): Promise<ColisAPIResponse | null> {
     try {
         const response = await fetch(`${BASE_URL}/colis?code=${code}`);

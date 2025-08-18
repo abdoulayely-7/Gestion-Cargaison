@@ -27,6 +27,19 @@ export declare function mettreAJourCargaison(id: number, cargaison: Partial<Carg
  */
 export declare function supprimerCargaison(id: number): Promise<void>;
 /**
+ * Ferme une cargaison (change l'état global à "Fermé")
+ */
+export declare function fermerCargaison(id: number): Promise<Cargaison>;
+/**
+ * Rouvre une cargaison (change l'état global à "Ouvert")
+ * Seulement possible si l'état d'avancement est "En attente"
+ */
+export declare function rouvrirCargaison(id: number): Promise<Cargaison>;
+/**
+ * Vérifie si une cargaison peut être rouverte
+ */
+export declare function peutEtreRouverte(cargaison: any): boolean;
+/**
  * Fonction utilitaire pour formater les coordonnées
  */
 export declare function formaterCoordonnees(lieuDepart: string, lieuArrivee: string): {

@@ -4,7 +4,10 @@ import {
     obtenirCargaisonsParType,
     obtenirCargaisonsParEtat,
     calculerPourcentageAvancement,
-    formaterCoordonnees
+    formaterCoordonnees,
+    fermerCargaison,
+    rouvrirCargaison,
+    peutEtreRouverte
 } from "../api/cargaison/cargaison.js";
 
 // Variables globales
@@ -70,6 +73,18 @@ export function obtenirCouleurEtat(etat: string): string {
     }
 }
 
+// Obtenir l'icône et la couleur selon l'état global
+export function obtenirStyleEtatGlobal(etatGlobal: string): { couleur: string, icone: string } {
+    switch (etatGlobal.toLowerCase()) {
+        case 'ouvert': 
+            return { couleur: 'bg-green-100 text-green-800', icone: 'unlock' };
+        case 'fermé':
+            return { couleur: 'bg-red-100 text-red-800', icone: 'lock' };
+        default: 
+            return { couleur: 'bg-gray-100 text-gray-800', icone: 'help-circle' };
+    }
+}
+
 // Formater le prix
 export function formaterPrix(prix: number): string {
     return new Intl.NumberFormat('fr-FR', {
@@ -107,6 +122,8 @@ export function afficherCargaisons(cargaisons: any[]): void {
 
     tableBody.innerHTML = cargaisons.map(cargaison => {
         const pourcentage = calculerPourcentageAvancement(cargaison.etatAvancement);
+        const styleEtatGlobal = obtenirStyleEtatGlobal(cargaison.etatGlobal);
+        const peutRouvrir = peutEtreRouverte(cargaison);
         
         return `
         <tr class="hover:bg-gray-50 cursor-pointer" onclick="voirDetailsCargaison(${cargaison.id})">
@@ -132,17 +149,43 @@ export function afficherCargaisons(cargaisons: any[]): void {
                 </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${obtenirCouleurEtat(cargaison.etatAvancement)}">
-                    ${obtenirLabelEtat(cargaison.etatAvancement)}
-                </span>
+                <div class="space-y-1">
+                    <div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${obtenirCouleurEtat(cargaison.etatAvancement)}">
+                            ${obtenirLabelEtat(cargaison.etatAvancement)}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styleEtatGlobal.couleur}">
+                            <i data-lucide="${styleEtatGlobal.icone}" class="w-3 h-3 mr-1"></i>
+                            ${cargaison.etatGlobal}
+                        </span>
+                    </div>
+                </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                 ${cargaison.prixTransport ? formaterPrix(cargaison.prixTransport) : 'N/A'}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <div class="flex space-x-2">
-                    <button onclick="event.stopPropagation(); voirDetailsCargaison(${cargaison.id})" class="text-indigo-600 hover:text-indigo-900">Voir</button>
-                    <button onclick="event.stopPropagation(); modifierCargaison(${cargaison.id})" class="text-gray-600 hover:text-gray-900">Modifier</button>
+                    <button onclick="event.stopPropagation(); voirDetailsCargaison(${cargaison.id})" class="text-indigo-600 hover:text-indigo-900" title="Voir détails">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="event.stopPropagation(); modifierCargaison(${cargaison.id})" class="text-gray-600 hover:text-gray-900" title="Modifier">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                    </button>
+                    ${cargaison.etatGlobal.toLowerCase() === 'ouvert' ? 
+                        `<button onclick="event.stopPropagation(); fermerCargaisonAction(${cargaison.id})" class="text-red-600 hover:text-red-900" title="Fermer la cargaison">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                        </button>` :
+                        peutRouvrir ? 
+                            `<button onclick="event.stopPropagation(); rouvrirCargaisonAction(${cargaison.id})" class="text-green-600 hover:text-green-900" title="Rouvrir la cargaison">
+                                <i data-lucide="unlock" class="w-4 h-4"></i>
+                            </button>` :
+                            `<button disabled class="text-gray-400 cursor-not-allowed" title="Ne peut être rouverte qu'en état 'En attente'">
+                                <i data-lucide="unlock" class="w-4 h-4"></i>
+                            </button>`
+                    }
                 </div>
             </td>
         </tr>
@@ -287,6 +330,50 @@ function modifierCargaison(id: number): void {
     window.location.href = `/cargaison/modifier/${id}`;
 }
 
+// Fonction pour fermer une cargaison
+async function fermerCargaisonAction(id: number): Promise<void> {
+    try {
+        // Demander confirmation
+        if (!confirm('Êtes-vous sûr de vouloir fermer cette cargaison ?')) {
+            return;
+        }
+
+        console.log('Fermeture de la cargaison:', id);
+        await fermerCargaison(id);
+        
+        // Afficher un message de succès
+        alert('Cargaison fermée avec succès');
+        
+        // Rafraîchir la liste
+        await chargerCargaisons();
+    } catch (error) {
+        console.error('Erreur lors de la fermeture de la cargaison:', error);
+        alert('Erreur lors de la fermeture de la cargaison: ' + (error as Error).message);
+    }
+}
+
+// Fonction pour rouvrir une cargaison
+async function rouvrirCargaisonAction(id: number): Promise<void> {
+    try {
+        // Demander confirmation
+        if (!confirm('Êtes-vous sûr de vouloir rouvrir cette cargaison ?')) {
+            return;
+        }
+
+        console.log('Réouverture de la cargaison:', id);
+        await rouvrirCargaison(id);
+        
+        // Afficher un message de succès
+        alert('Cargaison rouverte avec succès');
+        
+        // Rafraîchir la liste
+        await chargerCargaisons();
+    } catch (error) {
+        console.error('Erreur lors de la réouverture de la cargaison:', error);
+        alert('Erreur lors de la réouverture de la cargaison: ' + (error as Error).message);
+    }
+}
+
 // Fonction pour rafraîchir les données
 export async function rafraichirCargaisons(): Promise<void> {
     await chargerCargaisons();
@@ -302,11 +389,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // Rendre les fonctions globales accessibles
 (window as any).voirDetailsCargaison = voirDetailsCargaison;
 (window as any).modifierCargaison = modifierCargaison;
+(window as any).fermerCargaisonAction = fermerCargaisonAction;
+(window as any).rouvrirCargaisonAction = rouvrirCargaisonAction;
 (window as any).rafraichirCargaisons = rafraichirCargaisons;
 
 // Export des fonctions principales
 export {
     chargerCargaisons,
     voirDetailsCargaison,
-    modifierCargaison
+    modifierCargaison,
+    fermerCargaisonAction,
+    rouvrirCargaisonAction
 };
