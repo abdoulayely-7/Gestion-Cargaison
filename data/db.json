@@ -1,8 +1,110 @@
 {
   "gestionnaire": [
-    { "id": 1, "email": "ges@gmail.com", "password": "passer", "nom": "Gestionnaire", "prenom": "Test" }
+    {
+      "id": "1",
+      "email": "ges@gmail.com",
+      "password": "passer",
+      "nom": "Gestionnaire",
+      "prenom": "Test"
+    }
   ],
-  "cargaisons": [],
-  "colis": [],
+  "cargaisons": [
+    {
+      "id": "988e",
+      "poidsMax": 1234,
+      "type": "maritime",
+      "lieuDepart": "29.535230, -34.804688",
+      "lieuArrivee": "0.878872, -16.347656",
+      "distance": 3737.98,
+      "etatAvancement": "En attente",
+      "dateDepart": "",
+      "dateArrivee": "",
+      "numero": "CARG1755477147461",
+      "etatGlobal": "Ouvert",
+      "colis": [
+        "3e11"
+      ],
+      "prixTotalCargaison": 10000
+    },
+    {
+      "id": "6156",
+      "poidsMax": 1234,
+      "type": "maritime",
+      "lieuDepart": "24.527135, -60.468750",
+      "lieuArrivee": "6.664608, -30.585938",
+      "distance": 3750.69,
+      "etatAvancement": "En attente",
+      "dateDepart": "",
+      "dateArrivee": "",
+      "numero": "CARG1755479194025",
+      "etatGlobal": "Ouvert",
+      "colis": [
+        "dd61"
+      ],
+      "prixTotalCargaison": 10000
+    }
+  ],
+  "colis": [
+    {
+      "id": "3e11",
+      "etat": "En attente",
+      "poids": 123,
+      "expediteur": {
+        "id": 0,
+        "nom": "Ly",
+        "prenom": "Abdoulaye",
+        "email": "abdoulayely148@gmail.com",
+        "telephone": "773795383",
+        "adresse": "",
+        "password": ""
+      },
+      "destinataire": {
+        "id": 0,
+        "nom": "Ly",
+        "prenom": "Abdoulaye",
+        "email": "abdoulayely148@gmail.com",
+        "telephone": "773795383",
+        "adresse": "",
+        "password": ""
+      },
+      "typeProduit": "alimentaire",
+      "typeCargaison": "maritime",
+      "dateEnregistrement": "2025-08-18T00:32:27.461Z",
+      "dateLivraisonPrev": "",
+      "notes": "aszergt",
+      "code": "COL1755477147461undefined",
+      "cargaisonId": "988e"
+    },
+    {
+      "id": "dd61",
+      "etat": "En attente",
+      "poids": 123,
+      "expediteur": {
+        "id": 0,
+        "nom": "Dupont",
+        "prenom": "Abdoulaye",
+        "email": "abdoulayely148@gmail.com",
+        "telephone": "773795383",
+        "adresse": "",
+        "password": ""
+      },
+      "destinataire": {
+        "id": 0,
+        "nom": "Ly",
+        "prenom": "Abdoulaye",
+        "email": "abdoulayely148@gmail.com",
+        "telephone": "773795383",
+        "adresse": "",
+        "password": ""
+      },
+      "typeProduit": "chimique",
+      "typeCargaison": "maritime",
+      "dateEnregistrement": "2025-08-18T01:06:34.025Z",
+      "dateLivraisonPrev": "",
+      "notes": "",
+      "code": "COL1755479194025undefined",
+      "cargaisonId": "6156"
+    }
+  ],
   "users": []
 }

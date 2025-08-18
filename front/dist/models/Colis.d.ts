@@ -13,8 +13,7 @@ export declare class Colis {
     dateLivraisonPrev?: string | undefined;
     notes?: string | undefined;
     code: string;
-    protected id: number;
-    private static nextId;
+    id?: number;
     constructor(etat: ColisEtat | undefined, poids: number, expediteur: User, destinataire: User, typeProduit: ColisType, typeCargaison: CargaisonType, dateEnregistrement?: string, dateLivraisonPrev?: string | undefined, notes?: string | undefined);
     private generateCode;
     changerEtat(etat: ColisEtat): void;

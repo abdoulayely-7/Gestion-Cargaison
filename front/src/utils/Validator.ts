@@ -2,7 +2,6 @@ import {ErreurMessages} from "./erreurMessages.js";
 type Rule = {
     element: HTMLElement;
     validator: () => boolean;
-
     message: string;
 };
 
@@ -28,7 +27,6 @@ export class Validator {
             const errorEl = element.parentElement?.querySelector(".error-message") as HTMLElement;
 
             if (!validator()) {
-                // afficher l'erreur
                 if (errorEl) {
                     errorEl.textContent = message;
                 } else {

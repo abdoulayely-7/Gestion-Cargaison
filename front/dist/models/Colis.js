@@ -11,7 +11,6 @@ export class Colis {
     notes;
     code;
     id;
-    static nextId = 0;
     constructor(etat = ColisEtat.EN_ATTENTE, poids, expediteur, destinataire, typeProduit, typeCargaison, dateEnregistrement = new Date().toISOString(), dateLivraisonPrev, notes) {
         this.etat = etat;
         this.poids = poids;
@@ -23,7 +22,6 @@ export class Colis {
         this.dateLivraisonPrev = dateLivraisonPrev;
         this.notes = notes;
         this.code = this.generateCode();
-        this.id = Colis.nextId++;
     }
     generateCode() {
         return `COL${Date.now()}${this.id}`;

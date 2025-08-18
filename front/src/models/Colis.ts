@@ -6,8 +6,7 @@ import type {ColisType} from "../enums/ColisType.js";
 export class Colis{
     public code: string;
 
-    protected id: number ;
-    private static nextId: number = 0;
+    public id?: number ;
 
     constructor(
         public etat: ColisEtat = ColisEtat.EN_ATTENTE,
@@ -21,7 +20,6 @@ export class Colis{
         public notes?: string
 ) {
         this.code = this.generateCode();
-        this.id = Colis.nextId++;
     }
 
 private generateCode(): string {

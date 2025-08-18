@@ -16,7 +16,6 @@ export class Validator {
         for (const { element, validator, message } of rules) {
             const errorEl = element.parentElement?.querySelector(".error-message");
             if (!validator()) {
-                // afficher l'erreur
                 if (errorEl) {
                     errorEl.textContent = message;
                 }
